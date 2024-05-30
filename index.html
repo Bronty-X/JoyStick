@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body{
+        background-color: #ffffff;
+    }
+    .joystick{
+        width: 100px;
+        height: 100px;
+        border:1px solid rgb(148, 148, 148);
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .joystickChild{
+        width: 60%;
+        height: 60%;
+        background-color: rgba(255, 255, 255, 0.468);
+        border:1px solid rgb(148, 148, 148);
+        backdrop-filter: blur(1px);
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+<body>
+    <div class="joystick">
+        <div class="joystickChild"></div>
+    </div>
+</body>
+<script>
+    var joystick = document.querySelector('.joystick');
+    var joyStickChild = document.querySelector('.joystickChild');
+
+    let joyStickX, joyStickY;
+    
+    joyStickChild.onpointermove = function(event){
+        if(event.buttons){
+            this.style.left= joyStickX = Math.min(Math.abs(this.offsetLeft + event.movementX),100)+ 'px'
+            this.style.top = joyStickY = Math.min(Math.abs(this.offsetTop  + event.movementY),100)+ 'px'
+            this.style.position = 'absolute'
+            this.draggable      = false
+            console.log(this.style.left,this.style.top);
+        }else{
+            joyStickChild.style.left     = '50%'
+            joyStickChild.style.top      = '50%'
+        }
+    }
+    joyStickChild.onmouseup = function(){
+        joyStickChild.style.left     = '50%'
+        joyStickChild.style.top      = '50%'
+    }
+</script>
+
+</html>
