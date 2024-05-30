@@ -33,6 +33,9 @@
     }
 </style>
 <body>
+    <div>
+        <p class="joystick-display"></p>
+    </div>
     <div class="joystick">
         <div class="joystickChild"></div>
     </div>
@@ -40,11 +43,12 @@
 <script>
     var joystick = document.querySelector('.joystick');
     var joyStickChild = document.querySelector('.joystickChild');
-
-    let joyStickX, joyStickY;
+    let joyStickClick = false;
+    let joyStickX=50, joyStickY=50;
     
     joyStickChild.onpointermove = function(event){
         if(event.buttons){
+            joyStickClick = true;
             this.style.left=(joyStickX = Math.min(Math.abs(this.offsetLeft + event.movementX),100))+ 'px'
             this.style.top =(joyStickY = Math.min(Math.abs(this.offsetTop  + event.movementY),100))+ 'px'
             this.style.position = 'absolute'
@@ -52,13 +56,17 @@
         }else{
             joyStickChild.style.left     = '50%'
             joyStickChild.style.top      = '50%'
+            joyStickX=50, joyStickY=50;
         }
         console.log(joyStickX,joyStickY);
+        document.querySelector('.joystick-display').innerHTML = `X: ${joyStickX} Y: ${joyStickY}`
     }
-    joyStickChild.onmouseup = function(){
+    document.addEventListener('pointerup',function(){
         joyStickChild.style.left     = '50%'
         joyStickChild.style.top      = '50%'
-    }
+        joyStickX=50, joyStickY=50;
+        document.querySelector('.joystick-display').innerHTML = `X: ${joyStickX} Y: ${joyStickY}`
+    })
 </script>
 
 </html>
