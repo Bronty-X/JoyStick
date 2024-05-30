@@ -45,15 +45,15 @@
     
     joyStickChild.onpointermove = function(event){
         if(event.buttons){
-            this.style.left= joyStickX = Math.min(Math.abs(this.offsetLeft + event.movementX),100)+ 'px'
-            this.style.top = joyStickY = Math.min(Math.abs(this.offsetTop  + event.movementY),100)+ 'px'
+            this.style.left=(joyStickX = Math.min(Math.abs(this.offsetLeft + event.movementX),100))+ 'px'
+            this.style.top =(joyStickY = Math.min(Math.abs(this.offsetTop  + event.movementY),100))+ 'px'
             this.style.position = 'absolute'
             this.draggable      = false
-            console.log(this.style.left,this.style.top);
         }else{
             joyStickChild.style.left     = '50%'
             joyStickChild.style.top      = '50%'
         }
+        console.log(joyStickX,joyStickY);
     }
     joyStickChild.onmouseup = function(){
         joyStickChild.style.left     = '50%'
