@@ -1,0 +1,22 @@
+{
+  "name": "joystick",
+  "version": "1.0.0",
+  "description": "粗はあるけど一応作りました。粗を直すかは気分次第。\r ## 粗リスト\r - 値は原則0~100を吐くようになってますがたまに範囲外の値が出ます。\r - スティックを激しく動かすと一瞬動きが止まることがあります。\r - CSSは出鱈目です。\r ## 値の参照\r - 値は``let joyStickX, joyStickY;``に格納されています。\r - 値は0~100で中心が50です。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "fs": "^0.0.1-security",
+    "gulp": "^5.0.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-htmlmin": "^5.0.1",
+    "gulp-inject-string": "^1.1.2",
+    "gulp-uglify": "^3.0.2",
+    "vinyl-buffer": "^1.0.1"
+  }
+}
