@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+
+</style>
+<body>
+    <canvas id="canvas" width="500" height="500"></canvas>
+</body>
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let x = canvas.width/2;
+    let y = canvas.height/2;
+    const canvasCenter = {x:canvas.width/2,y:canvas.height/2};
+    let r = 40;
+    let dx = 2;
+    let dy = 2;
+    let mousePos = {x:NaN,y:NaN};
+    let mouseClick = false;
+    function draw(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.beginPath();
+        ctx.arc(x,y,r,0,Math.PI*2);
+        ctx.fill();
+        if(mouseClick){
+            x = mousePos.x;
+            y = mousePos.y;
+        }else{
+            if(x < canvasCenter.x){
+                x += dx;
+            }else if(x > canvasCenter.x){
+                x -= dx;
+            }
+
+            if(y < canvasCenter.y){
+                y += dy;
+            }else if(y > canvasCenter.y){
+                y -= dy;
+            }
+        }
+        requestAnimationFrame(draw);
+    }
+    canvas.addEventListener('mousemove',function(e){
+        if(mousePos.x == NaN || mousePos.y == NaN){
+            mousePos.x = e.clientX;
+            mousePos.y = e.clientY;
+        }else{
+            //dx = e.clientX - mousePos.x;
+            //dy = e.clientY - mousePos.y;
+        }
+        mousePos.x = e.clientX;
+        mousePos.y = e.clientY;
+        
+    });
+    canvas.addEventListener('mousedown',function(e){
+        mouseClick = true;
+    });
+    canvas.addEventListener('mouseup',function(e){
+        mouseClick = false;
+    });
+    draw();
+</script>
+</html>
