@@ -14,5 +14,12 @@
     <!-- inject:js -->
     <script src="js/script.js"></script>
     <!-- endinjectjs -->
+    <script>
+        function noscroll(e){
+            e.preventDefault();
+        }
+        document.addEventListener( 'touchmove', noscroll, { passive: false } );
+        document.addEventListener( 'wheel', noscroll, { passive: false } );
+    </script>
 </body>
 </html>

@@ -1,11 +1,11 @@
 class JoyStick {
 
     //Properties
-    maxDistance:number = 100;
+    maxDistance:number = 60;
     resetSpeed:number = 2.5;
     innerStrokeColor:string = 'black';
     innerFillColor:string = 'white';
-    innerSize:number = 40;
+    innerSize:number = 35;
     outerStrokeColor:string = 'black';
     outerFillColor:string = 'white';
     //
@@ -18,10 +18,15 @@ class JoyStick {
     rect:DOMRect;
     constructor(joystick:HTMLCanvasElement) {
         this.joystick = joystick;
+        joystick.draggable = false;
         joystick.addEventListener('mousedown', this.mouseDown.bind(this));
         joystick.addEventListener('mouseleave', this.mouseUp.bind(this));
         joystick.addEventListener('mouseup', this.mouseUp.bind(this));
         joystick.addEventListener('mousemove', this.mouseMove.bind(this));
+
+        joystick.addEventListener('touchstart', this.mouseDown.bind(this));
+        joystick.addEventListener('touchend', this.mouseUp.bind(this));
+        joystick.addEventListener('touchmove', this.touchMove.bind(this));
         this.Init();
 
     }
@@ -70,10 +75,21 @@ class JoyStick {
         this.mousePosition.y = e.clientY-this.rect.top;
 
     }
+    touchMove(e:TouchEvent) {
+        console.log('touchMove')
+        for(let i = 0; i < e.touches.length; i++) {
+            if(e.touches[i].target === this.joystick) {
+                this.mousePosition.x = e.touches[i].clientX-this.rect.left;
+                this.mousePosition.y = e.touches[i].clientY-this.rect.top;
+            }
+        }
+        //this.mousePosition.x = e.touches[0].clientX-this.rect.left;
+        //this.mousePosition.y = e.touches[0].clientY-this.rect.top;
+    }
 
     get stickPosition() {
-        let x = this.joystickPosition.x - this.joyStickCenter.x;
-        let y = this.joystickPosition.y - this.joyStickCenter.y;
+        let x = (this.joystickPosition.x - this.joyStickCenter.x)/this.maxDistance;
+        let y = (this.joystickPosition.y - this.joyStickCenter.y)/this.maxDistance;
         y = -y;
         return {x: x, y: y};
 
