@@ -7,6 +7,19 @@ const htmlmin = require('gulp-htmlmin');
 const concat = require('gulp-concat');
 const buffer = require('vinyl-buffer');
 const replace = require('gulp-replace');
+const typescript = require('gulp-typescript');
+
+// TypeScriptファイルをJavaScriptファイルにコンパイルするタスク
+gulp.task('compile-ts', function () {
+    return gulp.src('src/ts/*.ts')
+        .pipe(typescript({
+            target: 'ES5',
+            removeComments: true
+        }))
+        .pipe(buffer())
+        .pipe(concat('compiled.js'))
+        .pipe(gulp.dest('src/js'));
+});
 
 // JavaScriptファイルをミニファイするタスク
 gulp.task('minify-js', function () {
@@ -60,4 +73,4 @@ gulp.task('inject-css', function () {
 });
 
 // デフォルトタスク
-gulp.task('default', gulp.series('minify-js', 'minify-css', 'remove-js-inject', 'remove-css-inject','inject-js', 'inject-css'));
+gulp.task('default', gulp.series('compile-ts','minify-js', 'minify-css', 'remove-js-inject', 'remove-css-inject','inject-js', 'inject-css'));
