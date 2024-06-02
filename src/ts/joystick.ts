@@ -1,6 +1,3 @@
-
-
-
 class JoyStick {
 
     //Properties
@@ -23,6 +20,7 @@ class JoyStick {
         this.joystick = joystick;
         joystick.addEventListener('mousedown', this.mouseDown.bind(this));
         joystick.addEventListener('mouseleave', this.mouseUp.bind(this));
+        joystick.addEventListener('mouseup', this.mouseUp.bind(this));
         joystick.addEventListener('mousemove', this.mouseMove.bind(this));
         this.Init();
 
@@ -32,6 +30,8 @@ class JoyStick {
         this.ctx = this.joystick.getContext('2d');
         this.joyStickCenter.x = this.joystick.offsetWidth / 2;
         this.joyStickCenter.y = this.joystick.offsetHeight / 2;
+        this.joystickPosition.x = this.joyStickCenter.x;
+        this.joystickPosition.y = this.joyStickCenter.y;
         this.rect = this.joystick.getBoundingClientRect();
         setInterval(this.drawJoystick.bind(this), 1000/60)
         console.log("Init");
@@ -68,10 +68,19 @@ class JoyStick {
         console.log('mouseMove')
         this.mousePosition.x = e.clientX-this.rect.left;
         this.mousePosition.y = e.clientY-this.rect.top;
-        console.log(this.mousePosition);
+
+    }
+
+    get stickPosition() {
+        let x = this.joystickPosition.x - this.joyStickCenter.x;
+        let y = this.joystickPosition.y - this.joyStickCenter.y;
+        y = -y;
+        return {x: x, y: y};
+
     }
 
     drawJoystick(){
+        console.log(this.stickPosition)
         if(this.ctx) {
             this.ctx.clearRect(0, 0, this.joystick.width, this.joystick.height);
             this.ctx.beginPath();
