@@ -99,6 +99,7 @@ class JoyStick {
         console.log(this.stickPosition)
         if(this.ctx) {
             this.ctx.clearRect(0, 0, this.joystick.width, this.joystick.height);
+            //Draw outer circle
             this.ctx.beginPath();
             this.ctx.arc(this.joyStickCenter.x, this.joyStickCenter.y, this.maxDistance, 0, Math.PI * 2);
             this.ctx.strokeStyle = this.outerStrokeColor;
@@ -106,6 +107,7 @@ class JoyStick {
             this.ctx.stroke();
             this.ctx.fill();
             this.ctx.closePath();
+           
 
             if(this.isTouch) {
                 let closerPoint = this.getCloserPoint(this.mousePosition.x, this.mousePosition.y);
@@ -155,3 +157,20 @@ let joyStickArray:JoyStick[] = [];
 joysticks.forEach(joystickElement => {
     joyStickArray.push(new JoyStick(joystickElement));
 });
+
+let displayX1:HTMLInputElement = document.getElementById('posDisplay1-x')! as HTMLInputElement;
+let displayY1:HTMLInputElement = document.getElementById('posDisplay1-y')! as HTMLInputElement;
+let displayX2:HTMLInputElement = document.getElementById('posDisplay2-x')! as HTMLInputElement;
+let displayY2:HTMLInputElement = document.getElementById('posDisplay2-y')! as HTMLInputElement;
+
+displayX1.value = '0';
+displayY1.value = '0';
+displayX2.value = '0';
+displayY2.value = '0';
+
+setInterval(() => {
+    displayX1.value = joyStickArray[0].stickPosition.x.toFixed(2);
+    displayY1.value = joyStickArray[0].stickPosition.y.toFixed(2);
+    displayX2.value = joyStickArray[1].stickPosition.x.toFixed(2);
+    displayY2.value = joyStickArray[1].stickPosition.y.toFixed(2);
+}, 1000/60);

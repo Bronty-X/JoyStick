@@ -9,10 +9,22 @@
     <!-- endinjectcss -->
 </head> 
 <body>
+    <div>
+        <label for="x">left stick x:</label>
+        <input type="number" name="x" id="posDisplay1-x">
+        <label for="y">y:</label>
+        <input type="number" name="y" id="posDisplay1-y">
+        
+    </div>
+    <div>
+        <label for="x">right stick x:</label>
+        <input type="number" name="x" id="posDisplay2-x">
+        <label for="y">y:</label>
+        <input type="number" name="y" id="posDisplay2-y">
+    </div>
     <canvas class="joystick" width="400" height="400"></canvas>
     <canvas class="joystick" width="400" height="400"></canvas>
     <!-- inject:js -->
-    <script src="js/script.js"></script>
     <!-- endinjectjs -->
     <script>
         function noscroll(e){
