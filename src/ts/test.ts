@@ -4,31 +4,35 @@
 class JoyStick {
 
     //Properties
-    maxDistance:number = 50;
-    resetSpeed:number = 0.1;
+    maxDistance:number = 100;
+    resetSpeed:number = 2.5;
+    innerStrokeColor:string = 'black';
+    innerFillColor:string = 'white';
+    innerSize:number = 40;
+    outerStrokeColor:string = 'black';
+    outerFillColor:string = 'white';
     //
-    joystick:HTMLElement;
-    joystickInner:HTMLElement = document.createElement('div');
+    joystick:HTMLCanvasElement;
+    ctx:CanvasRenderingContext2D|null;
     joystickPosition:{x:number, y:number} = {x:0, y:0};
-    addedInner:HTMLElement;
     joyStickCenter:{x:number, y:number} = {x:0, y:0};
     isTouch:boolean = false;
     mousePosition:{x:number, y:number} = {x:0, y:0};
-    constructor(joystick:HTMLElement) {
+    rect:DOMRect;
+    constructor(joystick:HTMLCanvasElement) {
         this.joystick = joystick;
         joystick.addEventListener('mousedown', this.mouseDown.bind(this));
-        joystick.addEventListener('mouseup', this.mouseUp.bind(this));
+        joystick.addEventListener('mouseleave', this.mouseUp.bind(this));
         joystick.addEventListener('mousemove', this.mouseMove.bind(this));
         this.Init();
 
     }
     Init() {
-        this.joystickInner.classList.add('joystick-inner');
-        this.addedInner=this.joystick.appendChild(this.joystickInner);
-
+        
+        this.ctx = this.joystick.getContext('2d');
         this.joyStickCenter.x = this.joystick.offsetWidth / 2;
         this.joyStickCenter.y = this.joystick.offsetHeight / 2;
-
+        this.rect = this.joystick.getBoundingClientRect();
         setInterval(this.drawJoystick.bind(this), 1000/60)
         console.log("Init");
     }
@@ -62,43 +66,66 @@ class JoyStick {
 
     mouseMove(e:MouseEvent) {
         console.log('mouseMove')
-        this.mousePosition.x = e.clientX;
-        this.mousePosition.y = e.clientY;
+        this.mousePosition.x = e.clientX-this.rect.left;
+        this.mousePosition.y = e.clientY-this.rect.top;
+        console.log(this.mousePosition);
     }
 
-    drawJoystick() {
-        console.log("drawJoystick")
-        if(this.isTouch){
-            this.addedInner.style.position = 'absolute';
-            if(this.isOutSide(this.mousePosition.x, this.mousePosition.y)) {
+    drawJoystick(){
+        if(this.ctx) {
+            this.ctx.clearRect(0, 0, this.joystick.width, this.joystick.height);
+            this.ctx.beginPath();
+            this.ctx.arc(this.joyStickCenter.x, this.joyStickCenter.y, this.maxDistance, 0, Math.PI * 2);
+            this.ctx.strokeStyle = this.outerStrokeColor;
+            this.ctx.fillStyle = this.outerFillColor;
+            this.ctx.stroke();
+            this.ctx.fill();
+            this.ctx.closePath();
+
+            if(this.isTouch) {
                 let closerPoint = this.getCloserPoint(this.mousePosition.x, this.mousePosition.y);
-                this.joystickPosition.x = closerPoint.x;
-                this.joystickPosition.y = closerPoint.y;
+                if(this.isOutSide(this.mousePosition.x, this.mousePosition.y)) {
+                    this.joystickPosition.x = closerPoint.x;
+                    this.joystickPosition.y = closerPoint.y;
+                } else {
+                    this.joystickPosition.x = this.mousePosition.x;
+                    this.joystickPosition.y = this.mousePosition.y;
+                }
             } else {
-                this.joystickPosition.x = this.mousePosition.x;
-                this.joystickPosition.y = this.mousePosition.y;
-            }
-        }else{
-            let distance = Math.sqrt(Math.pow(this.joystickPosition.x - this.joyStickCenter.x, 2) + Math.pow(this.joystickPosition.y - this.joyStickCenter.y, 2));
-            let distanceX = this.joystickPosition.x - this.joyStickCenter.x;
-            let distanceY = this.joystickPosition.y - this.joyStickCenter.y;
-            let distanceRatio = {x: distanceX / distance || 0, y: distanceY / distance || 0};
-            if(distance<2) {
-                this.joystickPosition.x = this.joyStickCenter.x;
-                this.joystickPosition.y = this.joyStickCenter.y;
-            } else {
-                this.joystickPosition.x -= distanceRatio.x * this.resetSpeed;
-                this.joystickPosition.y -= distanceRatio.y * this.resetSpeed;
-            }
-        }
-        this.addedInner.style.left = this.joystickPosition.x + 'px';
-        this.addedInner.style.top = this.joystickPosition.y + 'px';
-    }
+                let distance = Math.sqrt(Math.pow(this.joystickPosition.x - this.joyStickCenter.x, 2) + Math.pow(this.joystickPosition.y - this.joyStickCenter.y, 2));
+                let distanceX = Math.abs(this.joystickPosition.x - this.joyStickCenter.x);
+                let distanceY = Math.abs(this.joystickPosition.y - this.joyStickCenter.y);
+                let distanceRatio = {x: distanceX / distance || 0, y: distanceY / distance || 0};
+                if(distance < 2) {
+                    this.joystickPosition.x = this.joyStickCenter.x;
+                    this.joystickPosition.y = this.joyStickCenter.y;    
+                } 
+                if(this.joystickPosition.x < this.joyStickCenter.x) {
+                    this.joystickPosition.x += this.resetSpeed * distanceRatio.x;
+                } else {
+                    this.joystickPosition.x -= this.resetSpeed * distanceRatio.x;
+                }
 
+                if(this.joystickPosition.y < this.joyStickCenter.y) {
+                    this.joystickPosition.y += this.resetSpeed * distanceRatio.y;
+                } else {
+                    this.joystickPosition.y -= this.resetSpeed * distanceRatio.y;
+                }
+            }
+            this.ctx.beginPath();
+            this.ctx.arc(this.joystickPosition.x, this.joystickPosition.y, this.innerSize, 0, Math.PI * 2);
+            this.ctx.strokeStyle = this.innerStrokeColor;
+            this.ctx.fillStyle = this.innerFillColor;
+            this.ctx.stroke();
+            this.ctx.fill();
+            this.ctx.closePath();
+        }
+    }
+   
 
 }
 
-let joysticks:NodeListOf<HTMLElement> = document.querySelectorAll('.joystick');
+let joysticks:NodeListOf<HTMLCanvasElement> = document.querySelectorAll('.joystick');
 let joyStickArray:JoyStick[] = [];
 joysticks.forEach(joystickElement => {
     joyStickArray.push(new JoyStick(joystickElement));
