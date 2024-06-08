@@ -9,19 +9,21 @@ const buffer = require('vinyl-buffer');
 const replace = require('gulp-replace');
 const typescript = require('gulp-typescript');
 
-// TypeScriptファイルをJavaScriptファイルにコンパイルするタスク
+// TypeScriptファイルをJavaScriptにコンパイル後ミニファイ化
 gulp.task('compile-ts', function () {
     return gulp.src('src/ts/*.ts')
         .pipe(typescript({
             target: 'ES5',
             removeComments: true
         }))
+        .pipe(uglify())
         .pipe(buffer())
-        .pipe(concat('compiled.js'))
-        .pipe(gulp.dest('src/js'));
+        .pipe(concat('joystick.min.js'))
+        .pipe(gulp.dest('dist/js'))
 });
 
 // JavaScriptファイルをミニファイするタスク
+/** 
 gulp.task('minify-js', function () {
     return gulp.src('src/js/*.js')
         .pipe(concat('all.min.js'))
@@ -29,7 +31,7 @@ gulp.task('minify-js', function () {
         .pipe(buffer())
         .pipe(gulp.dest('dist/js'));
 });
-
+**/
 // CSSファイルをミニファイするタスク
 gulp.task('minify-css', function () {
     return gulp.src('src/css/*.css')
@@ -73,4 +75,4 @@ gulp.task('inject-css', function () {
 });
 
 // デフォルトタスク
-gulp.task('default', gulp.series('compile-ts','minify-js', 'minify-css', 'remove-js-inject', 'remove-css-inject','inject-js', 'inject-css'));
+gulp.task('default', gulp.series('compile-ts', 'minify-css', 'remove-js-inject', 'remove-css-inject','inject-js', 'inject-css'));
