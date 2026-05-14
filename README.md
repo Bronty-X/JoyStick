@@ -1,9 +1,14 @@
+<img width="868" height="505" alt="image" src="https://github.com/user-attachments/assets/a8cd2175-0122-4be7-8e35-799a0775b800" />
+
 # JoyStick
-粗はあるけど一応作りました。粗を直すかは気分次第。
-## 粗リスト
-- 値は原則0~100を吐くようになってますがたまに範囲外の値が出ます。
-- スティックを激しく動かすと一瞬動きが止まることがあります。
-- CSSは出鱈目です。
-## 値の参照
-- 値は``let joyStickX, joyStickY;``に格納されています。
-- 値は0~100で中心が50です。
+HTMLにアナログスティックを追加するUIライブラリです。
+
+## How to use
+
+1.下記のコードをhtmlに追加してください。  
+canvasを設置し、classに``joystick``を指定すると、自動的にスティックが描画されます。
+```html
+<canvas class="joystick" width="400" height="400"></canvas>
+<canvas class="joystick" width="400" height="400"></canvas>
+<script src="https://cdn.jsdelivr.net/gh/Bronty-X/JoyStick@main/dist/js/joystick.min.js"></script>
+```
